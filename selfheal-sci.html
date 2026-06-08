@@ -1,0 +1,1261 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SelfHeal Sci — Polímeros Autorreparables</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Crimson+Pro:ital,wght@0,300;0,400;0,600;1,300;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --teal-50: #E1F5EE;
+    --teal-200: #5DCAA5;
+    --teal-400: #1D9E75;
+    --teal-600: #0F6E56;
+    --teal-800: #085041;
+    --teal-900: #04342C;
+    --blue-50: #E6F1FB;
+    --blue-200: #85B7EB;
+    --blue-400: #378ADD;
+    --blue-600: #185FA5;
+    --blue-800: #0C447C;
+    --amber-100: #FAC775;
+    --amber-400: #BA7517;
+    --gray-50: #F1EFE8;
+    --gray-100: #D3D1C7;
+    --gray-400: #888780;
+    --gray-700: #444441;
+    --gray-900: #2C2C2A;
+    --bg: #06140f;
+    --bg2: #0b1f17;
+    --bg3: #0f2a1e;
+    --surface: rgba(255,255,255,0.04);
+    --surface2: rgba(255,255,255,0.08);
+    --border: rgba(29,158,117,0.2);
+    --border2: rgba(29,158,117,0.4);
+    --text: #e8f5f0;
+    --text-muted: #7ab8a0;
+    --text-dim: rgba(232,245,240,0.45);
+    --accent: #1D9E75;
+    --accent-light: #5DCAA5;
+    --accent-glow: rgba(29,158,117,0.15);
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'DM Sans', sans-serif;
+    font-weight: 300;
+    line-height: 1.75;
+    overflow-x: hidden;
+  }
+
+  /* ─── GRID TEXTURE ─── */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image:
+      linear-gradient(rgba(29,158,117,0.04) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(29,158,117,0.04) 1px, transparent 1px);
+    background-size: 60px 60px;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  /* ─── NAV ─── */
+  nav {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 100;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1rem 3rem;
+    background: rgba(6,20,15,0.85);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--border);
+  }
+
+  .nav-logo {
+    font-family: 'Space Mono', monospace;
+    font-size: 1.1rem;
+    color: var(--accent-light);
+    letter-spacing: 0.05em;
+    text-decoration: none;
+  }
+
+  .nav-logo span {
+    color: var(--text-muted);
+  }
+
+  nav ul {
+    display: flex;
+    gap: 2rem;
+    list-style: none;
+  }
+
+  nav a {
+    font-size: 0.8rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    text-decoration: none;
+    transition: color 0.2s;
+  }
+
+  nav a:hover { color: var(--accent-light); }
+
+  /* ─── HERO ─── */
+  .hero {
+    position: relative;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 8rem 2rem 4rem;
+    z-index: 1;
+  }
+
+  .hero-badge {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.7rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--accent);
+    border: 1px solid var(--border2);
+    padding: 0.4rem 1rem;
+    border-radius: 2rem;
+    margin-bottom: 2rem;
+    background: var(--accent-glow);
+  }
+
+  .hero h1 {
+    font-family: 'Crimson Pro', serif;
+    font-size: clamp(3rem, 8vw, 6.5rem);
+    font-weight: 300;
+    line-height: 1.05;
+    letter-spacing: -0.02em;
+    margin-bottom: 1.5rem;
+    max-width: 900px;
+  }
+
+  .hero h1 em {
+    font-style: italic;
+    color: var(--accent-light);
+  }
+
+  .hero-sub {
+    font-size: 1.05rem;
+    color: var(--text-muted);
+    max-width: 560px;
+    margin-bottom: 3rem;
+    line-height: 1.8;
+  }
+
+  .hero-stats {
+    display: flex;
+    gap: 3rem;
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+
+  .stat {
+    text-align: center;
+  }
+
+  .stat-num {
+    font-family: 'Space Mono', monospace;
+    font-size: 2.2rem;
+    color: var(--accent-light);
+    display: block;
+    line-height: 1;
+    margin-bottom: 0.3rem;
+  }
+
+  .stat-label {
+    font-size: 0.75rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--text-dim);
+  }
+
+  .divider-line {
+    width: 1px;
+    height: 60px;
+    background: var(--border2);
+    align-self: center;
+  }
+
+  /* ─── SCROLL INDICATOR ─── */
+  .scroll-hint {
+    position: absolute;
+    bottom: 2.5rem;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+    color: var(--text-dim);
+    font-size: 0.7rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+  }
+
+  .scroll-line {
+    width: 1px;
+    height: 40px;
+    background: linear-gradient(to bottom, var(--accent), transparent);
+    animation: scrollPulse 2s ease-in-out infinite;
+  }
+
+  @keyframes scrollPulse {
+    0%, 100% { opacity: 0.3; transform: scaleY(0.8); }
+    50% { opacity: 1; transform: scaleY(1); }
+  }
+
+  /* ─── SECTIONS ─── */
+  section {
+    position: relative;
+    z-index: 1;
+    padding: 6rem 2rem;
+    max-width: 1100px;
+    margin: 0 auto;
+  }
+
+  .section-label {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.65rem;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 1rem;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+  }
+
+  .section-label::before {
+    content: '';
+    width: 24px;
+    height: 1px;
+    background: var(--accent);
+  }
+
+  h2 {
+    font-family: 'Crimson Pro', serif;
+    font-size: clamp(2rem, 4vw, 3.2rem);
+    font-weight: 300;
+    line-height: 1.15;
+    margin-bottom: 2rem;
+    letter-spacing: -0.01em;
+  }
+
+  h2 strong {
+    font-weight: 600;
+    color: var(--accent-light);
+  }
+
+  h3 {
+    font-family: 'Crimson Pro', serif;
+    font-size: 1.5rem;
+    font-weight: 400;
+    color: var(--accent-light);
+    margin-bottom: 1rem;
+    margin-top: 2rem;
+  }
+
+  p {
+    color: rgba(232,245,240,0.8);
+    margin-bottom: 1.2rem;
+    font-size: 1rem;
+  }
+
+  /* ─── INTRO ─── */
+  .intro-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 4rem;
+    align-items: start;
+  }
+
+  .intro-visual {
+    position: relative;
+    height: 320px;
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    overflow: hidden;
+    background: var(--bg3);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .molecule-svg {
+    width: 90%;
+    height: 90%;
+    opacity: 0.85;
+  }
+
+  /* ─── ANTECEDENTES ─── */
+  .timeline {
+    position: relative;
+    padding-left: 2rem;
+  }
+
+  .timeline::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0; bottom: 0;
+    width: 1px;
+    background: linear-gradient(to bottom, var(--accent), transparent);
+  }
+
+  .timeline-item {
+    position: relative;
+    margin-bottom: 3rem;
+  }
+
+  .timeline-dot {
+    position: absolute;
+    left: -2.4rem;
+    top: 0.25rem;
+    width: 9px;
+    height: 9px;
+    border-radius: 50%;
+    background: var(--accent);
+    border: 2px solid var(--bg);
+    box-shadow: 0 0 0 3px var(--accent-glow);
+  }
+
+  .timeline-year {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.75rem;
+    color: var(--accent);
+    letter-spacing: 0.1em;
+    margin-bottom: 0.4rem;
+  }
+
+  .timeline-item h3 {
+    font-size: 1.1rem;
+    margin: 0 0 0.5rem;
+    color: var(--text);
+  }
+
+  .timeline-item p {
+    font-size: 0.9rem;
+    color: var(--text-muted);
+    margin: 0;
+  }
+
+  /* ─── CLASIFICACIÓN ─── */
+  .class-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.5rem;
+    margin-top: 2rem;
+  }
+
+  .class-card {
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    padding: 1.75rem;
+    background: var(--surface);
+    transition: border-color 0.3s, background 0.3s;
+  }
+
+  .class-card:hover {
+    border-color: var(--border2);
+    background: var(--surface2);
+  }
+
+  .class-card-label {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.65rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 0.75rem;
+  }
+
+  .class-card h3 {
+    font-size: 1.2rem;
+    margin: 0 0 0.75rem;
+    color: var(--text);
+  }
+
+  .class-card p {
+    font-size: 0.9rem;
+    color: var(--text-muted);
+    margin: 0;
+  }
+
+  /* ─── MECANISMOS TABLA ─── */
+  .mec-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1rem;
+    margin-top: 2.5rem;
+  }
+
+  .mec-card {
+    border: 1px solid var(--border);
+    padding: 1.5rem;
+    border-radius: 4px;
+    background: var(--surface);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .mec-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 2px;
+    background: var(--accent);
+  }
+
+  .mec-card.blue::before { background: var(--blue-400); }
+  .mec-card.amber::before { background: var(--amber-100); }
+
+  .mec-num {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.65rem;
+    color: var(--text-dim);
+    letter-spacing: 0.1em;
+    margin-bottom: 0.75rem;
+  }
+
+  .mec-card h4 {
+    font-family: 'Crimson Pro', serif;
+    font-size: 1.05rem;
+    font-weight: 400;
+    color: var(--text);
+    margin-bottom: 0.5rem;
+  }
+
+  .mec-card p {
+    font-size: 0.82rem;
+    color: var(--text-muted);
+    margin: 0;
+    line-height: 1.6;
+  }
+
+  /* ─── PROPIEDADES ─── */
+  .props-container {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 3rem;
+    align-items: center;
+  }
+
+  .efficiency-bars { margin-top: 1.5rem; }
+
+  .bar-item { margin-bottom: 1.5rem; }
+
+  .bar-label {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.82rem;
+    color: var(--text-muted);
+    margin-bottom: 0.4rem;
+  }
+
+  .bar-track {
+    height: 4px;
+    background: var(--surface2);
+    border-radius: 2px;
+    overflow: hidden;
+  }
+
+  .bar-fill {
+    height: 100%;
+    border-radius: 2px;
+    background: var(--accent);
+    transition: width 1.5s ease;
+  }
+
+  .bar-fill.blue { background: var(--blue-400); }
+  .bar-fill.amber { background: var(--amber-100); }
+
+  /* ─── APLICACIONES ─── */
+  .app-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.5rem;
+    margin-top: 2.5rem;
+  }
+
+  .app-card {
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    padding: 2rem 1.5rem;
+    background: var(--surface);
+    text-align: center;
+    transition: transform 0.3s, border-color 0.3s;
+  }
+
+  .app-card:hover {
+    transform: translateY(-4px);
+    border-color: var(--border2);
+  }
+
+  .app-icon {
+    width: 48px;
+    height: 48px;
+    margin: 0 auto 1rem;
+    border-radius: 50%;
+    background: var(--accent-glow);
+    border: 1px solid var(--border2);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .app-icon svg {
+    width: 24px;
+    height: 24px;
+    stroke: var(--accent-light);
+    fill: none;
+    stroke-width: 1.5;
+  }
+
+  .app-card h4 {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.9rem;
+    font-weight: 500;
+    color: var(--text);
+    margin-bottom: 0.5rem;
+  }
+
+  .app-card p {
+    font-size: 0.8rem;
+    color: var(--text-muted);
+    margin: 0;
+  }
+
+  /* ─── GLOSARIO ─── */
+  .glosario-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.5rem;
+    margin-top: 2rem;
+  }
+
+  .glosario-item {
+    border-left: 2px solid var(--border2);
+    padding: 1rem 1.25rem;
+    background: var(--surface);
+  }
+
+  .glosario-term {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.78rem;
+    color: var(--accent-light);
+    margin-bottom: 0.4rem;
+  }
+
+  .glosario-def {
+    font-size: 0.82rem;
+    color: var(--text-muted);
+    margin: 0;
+    line-height: 1.65;
+  }
+
+  /* ─── REFERENCIAS ─── */
+  .ref-list {
+    list-style: none;
+    counter-reset: ref-counter;
+  }
+
+  .ref-list li {
+    counter-increment: ref-counter;
+    display: flex;
+    gap: 1rem;
+    padding: 1rem 0;
+    border-bottom: 1px solid var(--border);
+    font-size: 0.85rem;
+    color: var(--text-muted);
+    line-height: 1.7;
+  }
+
+  .ref-num {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.7rem;
+    color: var(--accent);
+    flex-shrink: 0;
+    padding-top: 0.2rem;
+    min-width: 2rem;
+  }
+
+  .ref-list a {
+    color: var(--blue-200);
+    word-break: break-all;
+  }
+
+  /* ─── FOOTER ─── */
+  footer {
+    position: relative;
+    z-index: 1;
+    border-top: 1px solid var(--border);
+    padding: 2.5rem 3rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 1rem;
+  }
+
+  .footer-logo {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.9rem;
+    color: var(--accent-light);
+  }
+
+  .footer-copy {
+    font-size: 0.75rem;
+    color: var(--text-dim);
+  }
+
+  /* ─── SEPARADOR VISUAL ─── */
+  .full-sep {
+    width: 100%;
+    height: 1px;
+    background: linear-gradient(to right, transparent, var(--border2), transparent);
+    position: relative;
+    z-index: 1;
+    margin: 0;
+  }
+
+  /* ─── QUOTE HIGHLIGHT ─── */
+  .sci-quote {
+    border-left: 3px solid var(--accent);
+    padding: 1.25rem 2rem;
+    margin: 2.5rem 0;
+    background: var(--accent-glow);
+    font-family: 'Crimson Pro', serif;
+    font-size: 1.2rem;
+    font-style: italic;
+    color: var(--text);
+    border-radius: 0 4px 4px 0;
+  }
+
+  .sci-quote cite {
+    display: block;
+    font-style: normal;
+    font-size: 0.8rem;
+    font-family: 'DM Sans', sans-serif;
+    color: var(--text-muted);
+    margin-top: 0.75rem;
+    letter-spacing: 0.05em;
+  }
+
+  /* ─── RESPONSIVE ─── */
+  @media (max-width: 768px) {
+    nav { padding: 1rem 1.5rem; }
+    nav ul { display: none; }
+    section { padding: 4rem 1.25rem; }
+    .intro-grid,
+    .class-grid,
+    .props-container,
+    .glosario-grid { grid-template-columns: 1fr; }
+    .mec-grid { grid-template-columns: 1fr; }
+    .app-grid { grid-template-columns: 1fr 1fr; }
+    footer { flex-direction: column; text-align: center; }
+  }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <a href="#" class="nav-logo">SelfHeal<span>Sci</span></a>
+  <ul>
+    <li><a href="#introduccion">Introducción</a></li>
+    <li><a href="#antecedentes">Antecedentes</a></li>
+    <li><a href="#clasificacion">Clasificación</a></li>
+    <li><a href="#mecanismos">Mecanismos</a></li>
+    <li><a href="#aplicaciones">Aplicaciones</a></li>
+    <li><a href="#glosario">Glosario</a></li>
+    <li><a href="#referencias">Referencias</a></li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-badge">Nanotecnología · Ciencia de Materiales</div>
+  <h1>Polímeros<br><em>Autorreparables</em></h1>
+  <p class="hero-sub">
+    Materiales inteligentes capaces de restaurar sus propiedades tras sufrir daño, 
+    inspirados en los mecanismos de cicatrización de los tejidos biológicos vivos.
+  </p>
+  <div class="hero-stats">
+    <div class="stat">
+      <span class="stat-num">2001</span>
+      <span class="stat-label">Primer sistema autónomo</span>
+    </div>
+    <div class="divider-line"></div>
+    <div class="stat">
+      <span class="stat-num">~80%</span>
+      <span class="stat-label">Eficiencia de reparación (DA)</span>
+    </div>
+    <div class="divider-line"></div>
+    <div class="stat">
+      <span class="stat-num">1 nm</span>
+      <span class="stat-label">Escala de operación</span>
+    </div>
+  </div>
+  <div class="scroll-hint">
+    <div class="scroll-line"></div>
+    Desplazarse
+  </div>
+</div>
+
+<div class="full-sep"></div>
+
+<!-- INTRODUCCIÓN -->
+<section id="introduccion">
+  <div class="section-label">01 — Introducción</div>
+  <div class="intro-grid">
+    <div>
+      <h2>La materia que se<br><strong>repara a sí misma</strong></h2>
+      <p>
+        La nanotecnología es el estudio, diseño, síntesis y manipulación de materiales a escala 
+        nanométrica —un nanómetro equivale a la billonésima parte de un metro— y ha revolucionado 
+        el diseño de nuevos productos en múltiples industrias.
+      </p>
+      <p>
+        En las últimas décadas, el desarrollo de nuevos materiales ha transformado radicalmente 
+        la ingeniería, la medicina y la industria. Entre estos avances, los <em>polímeros autorreparables</em> 
+        representan una de las innovaciones más prometedoras dentro del campo de la nanotecnología.
+      </p>
+      <p>
+        Estos materiales poseen la capacidad de restaurar por sí mismos daños estructurales a nivel 
+        microscópico, prolongando su vida útil y reduciendo costos de mantenimiento. Su estudio combina 
+        principios de química de polímeros, ciencia de materiales y diseño molecular.
+      </p>
+      <div class="sci-quote">
+        "El desarrollo de materiales autorreparables artificiales se inspira directamente en la capacidad 
+        de los seres vivos para recuperar sus funciones fisiológicas tras sufrir lesiones."
+        <cite>— Kin et al., 2023</cite>
+      </div>
+    </div>
+    <div>
+      <div class="intro-visual">
+        <!-- SVG animado de cadena polimérica -->
+        <svg viewBox="0 0 300 260" class="molecule-svg" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <radialGradient id="nodeGrad" cx="50%" cy="50%" r="50%">
+              <stop offset="0%" stop-color="#5DCAA5" stop-opacity="0.9"/>
+              <stop offset="100%" stop-color="#0F6E56" stop-opacity="0.7"/>
+            </radialGradient>
+            <radialGradient id="crackGrad" cx="50%" cy="50%" r="50%">
+              <stop offset="0%" stop-color="#378ADD" stop-opacity="0.9"/>
+              <stop offset="100%" stop-color="#185FA5" stop-opacity="0.7"/>
+            </radialGradient>
+          </defs>
+
+          <!-- Cadena superior (rota) -->
+          <line x1="30" y1="80" x2="110" y2="80" stroke="#1D9E75" stroke-width="2.5" stroke-linecap="round"/>
+          <line x1="190" y1="80" x2="270" y2="80" stroke="#1D9E75" stroke-width="2.5" stroke-linecap="round"/>
+
+          <!-- Grieta indicada -->
+          <path d="M110,70 L130,85 L150,68 L170,82 L190,70" stroke="#378ADD" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+
+          <!-- Nodos cadena superior -->
+          <circle cx="60" cy="80" r="9" fill="url(#nodeGrad)"/>
+          <circle cx="100" cy="80" r="9" fill="url(#nodeGrad)"/>
+          <circle cx="200" cy="80" r="9" fill="url(#nodeGrad)"/>
+          <circle cx="240" cy="80" r="9" fill="url(#nodeGrad)"/>
+
+          <!-- Cadena central completa (reparada) -->
+          <line x1="30" y1="140" x2="270" y2="140" stroke="#1D9E75" stroke-width="2.5" stroke-linecap="round"/>
+          <circle cx="60" cy="140" r="9" fill="url(#nodeGrad)"/>
+          <circle cx="110" cy="140" r="9" fill="url(#nodeGrad)"/>
+          <circle cx="150" cy="140" r="11" fill="url(#crackGrad)" opacity="0.95"/>
+          <circle cx="190" cy="140" r="9" fill="url(#nodeGrad)"/>
+          <circle cx="240" cy="140" r="9" fill="url(#nodeGrad)"/>
+
+          <!-- Cadena inferior -->
+          <line x1="30" y1="200" x2="270" y2="200" stroke="#1D9E75" stroke-width="2.5" stroke-linecap="round"/>
+          <circle cx="60" cy="200" r="9" fill="url(#nodeGrad)"/>
+          <circle cx="130" cy="200" r="9" fill="url(#nodeGrad)"/>
+          <circle cx="200" cy="200" r="9" fill="url(#nodeGrad)"/>
+
+          <!-- Conexiones verticales -->
+          <line x1="60" y1="89" x2="60" y2="131" stroke="#0F6E56" stroke-width="1.5" stroke-dasharray="4,3"/>
+          <line x1="150" y1="89" x2="150" y2="129" stroke="#378ADD" stroke-width="1.5" stroke-dasharray="4,3"/>
+          <line x1="240" y1="89" x2="240" y2="131" stroke="#0F6E56" stroke-width="1.5" stroke-dasharray="4,3"/>
+          <line x1="60" y1="149" x2="60" y2="191" stroke="#0F6E56" stroke-width="1.5" stroke-dasharray="4,3"/>
+          <line x1="150" y1="151" x2="130" y2="191" stroke="#0F6E56" stroke-width="1.5" stroke-dasharray="4,3"/>
+          <line x1="200" y1="149" x2="200" y2="191" stroke="#0F6E56" stroke-width="1.5" stroke-dasharray="4,3"/>
+
+          <!-- Labels -->
+          <text x="150" y="58" text-anchor="middle" fill="#378ADD" font-size="10" font-family="'Space Mono', monospace">DAÑO</text>
+          <text x="150" y="125" text-anchor="middle" fill="#5DCAA5" font-size="10" font-family="'Space Mono', monospace">REPARACIÓN</text>
+
+          <!-- Flechas animadas indicando reparación -->
+          <g transform="translate(150,100)">
+            <animateTransform attributeName="transform" type="translate" values="150,92;150,100;150,92" dur="2s" repeatCount="indefinite"/>
+            <polygon points="0,-6 5,6 -5,6" fill="#5DCAA5" opacity="0.8"/>
+          </g>
+
+          <!-- Etiqueta nano -->
+          <text x="270" y="20" text-anchor="end" fill="#0F6E56" font-size="9" font-family="'Space Mono', monospace" opacity="0.7">~1–100 nm</text>
+        </svg>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="full-sep"></div>
+
+<!-- ANTECEDENTES -->
+<section id="antecedentes">
+  <div class="section-label">02 — Antecedentes históricos</div>
+  <h2>De la biología<br>a la <strong>síntesis artificial</strong></h2>
+  <p style="max-width:680px; margin-bottom: 3rem;">
+    La idea de crear materiales capaces de repararse a sí mismos fascinó a los científicos décadas antes 
+    de que la química de polímeros permitiera materializarla. A continuación, los hitos más relevantes 
+    del campo.
+  </p>
+
+  <div class="timeline">
+    <div class="timeline-item">
+      <div class="timeline-dot"></div>
+      <div class="timeline-year">Finales del siglo XX</div>
+      <h3>Consolidación del campo científico</h3>
+      <p>Los avances en química de polímeros permiten diseñar estructuras macromoleculares con funcionalidades específicas, sentando las bases de la autorreparación artificial inspirada en la cicatrización biológica.</p>
+    </div>
+    <div class="timeline-item">
+      <div class="timeline-dot"></div>
+      <div class="timeline-year">2001 — Nature</div>
+      <h3>White, Sottos et al. — Universidad de Illinois</h3>
+      <p>Publicación de "Autonomic healing of polymer composites". Microcápsulas de DCPD dispersadas con catalizador de Grubbs en matriz epóxica demuestran autorreparación autónoma verdadera por primera vez. Nace formalmente el campo.</p>
+    </div>
+    <div class="timeline-item">
+      <div class="timeline-dot"></div>
+      <div class="timeline-year">2002 — Chen et al.</div>
+      <h3>Polímeros con enlaces covalentes dinámicos (Diels-Alder)</h3>
+      <p>Se demuestra que polímeros con reacción de Diels-Alder pueden repararse térmicamente de manera reversible, inaugurando el enfoque intrínseco de la autorreparación.</p>
+    </div>
+    <div class="timeline-item">
+      <div class="timeline-dot"></div>
+      <div class="timeline-year">2007 — Toohey et al.</div>
+      <h3>Sistemas vasculares con microcanales</h3>
+      <p>Desarrollo de redes vasculares con microcanales interconectados que suministran agente reparador de forma continua, permitiendo reparaciones múltiples en la misma zona dañada.</p>
+    </div>
+    <div class="timeline-item">
+      <div class="timeline-dot"></div>
+      <div class="timeline-year">2008 — Cordier et al. — Nature</div>
+      <h3>Autorreparación supramolecular a temperatura ambiente</h3>
+      <p>Publicación de un polímero reparable a temperatura ambiente mediante enlaces de hidrógeno supramoleculares, ampliando considerablemente el espectro de mecanismos disponibles.</p>
+    </div>
+    <div class="timeline-item">
+      <div class="timeline-dot"></div>
+      <div class="timeline-year">2026 — IIM-UNAM, México</div>
+      <h3>Contribución latinoamericana original</h3>
+      <p>Síntesis de tres nuevos polímeros intrínsecos autorreparables mediante el método novedoso de polihidroxialquilación no estequiométrica catalizada por superácidos (PNESA), evidenciando la creciente contribución regional.</p>
+    </div>
+  </div>
+</section>
+
+<div class="full-sep"></div>
+
+<!-- CLASIFICACIÓN -->
+<section id="clasificacion">
+  <div class="section-label">03 — Concepto y Clasificación</div>
+  <h2>Dos grandes<br><strong>familias de sistemas</strong></h2>
+  <p style="max-width:680px;">
+    Los polímeros autorreparables se clasifican según el origen del agente reparador en dos grandes categorías.
+    Cada familia presenta subtipos con mecanismos, ventajas y limitaciones propias.
+  </p>
+
+  <div class="class-grid">
+    <div class="class-card">
+      <div class="class-card-label">Sistema A — Extrínseco</div>
+      <h3>Agente reparador externo</h3>
+      <p>
+        Incorporan en su matriz sustancias heterogéneas que se liberan ante el daño. 
+        Se distinguen tres tipos principales: microcápsulas, fibras huecas y redes vasculares.
+        Su principal limitación es que cada zona puede repararse un número limitado de veces.
+      </p>
+    </div>
+    <div class="class-card">
+      <div class="class-card-label">Sistema B — Intrínseco</div>
+      <h3>Reactividad de la cadena polimérica</h3>
+      <p>
+        Basan su capacidad reparadora en interacciones químicas reversibles de la propia 
+        cadena: enlaces covalentes dinámicos o interacciones supramoleculares. 
+        Permiten en teoría ciclos ilimitados de reparación.
+      </p>
+    </div>
+    <div class="class-card">
+      <div class="class-card-label">Extrínseco — Tipo 1</div>
+      <h3>Microcápsulas</h3>
+      <p>
+        Recipientes esféricos con cáscara de urea-formaldehído que encapsulan DCPD. 
+        Al romperse por una grieta, liberan el agente que polimeriza al contactar el 
+        catalizador de Grubbs. Son el tipo más estudiado del campo.
+      </p>
+    </div>
+    <div class="class-card">
+      <div class="class-card-label">Extrínseco — Tipo 2</div>
+      <h3>Fibras huecas</h3>
+      <p>
+        Fibras de vidrio o poliméricas con lumen interno que almacena el agente reparador. 
+        Mayor capacidad de almacenamiento que las microcápsulas; se integran bien en materiales 
+        compuestos, aunque su fabricación requiere mayor precisión.
+      </p>
+    </div>
+    <div class="class-card">
+      <div class="class-card-label">Extrínseco — Tipo 3</div>
+      <h3>Redes vasculares</h3>
+      <p>
+        Microcanales interconectados inspirados en el sistema circulatorio. Permiten múltiples 
+        ciclos de reparación en la misma zona. Su fabricación es compleja y costosa, lo que 
+        limita su aplicación industrial.
+      </p>
+    </div>
+    <div class="class-card">
+      <div class="class-card-label">Intrínseco — Covalentes / Supramoleculares</div>
+      <h3>Sistemas dinámicos reversibles</h3>
+      <p>
+        Incluyen reacciones de Diels-Alder, metátesis de disulfuro, bases de Schiff, 
+        enlaces de hidrógeno, interacciones π–π, coordinación metal-ligando e 
+        interacciones huésped-anfitrión.
+      </p>
+    </div>
+  </div>
+</section>
+
+<div class="full-sep"></div>
+
+<!-- MECANISMOS -->
+<section id="mecanismos">
+  <div class="section-label">04 — Mecanismos Químicos</div>
+  <h2>Cómo ocurre la<br><strong>autorreparación</strong></h2>
+  <p style="max-width:680px; margin-bottom: 0.5rem;">
+    Los mecanismos se dividen en covalentes dinámicos —que forman y rompen enlaces C–C en respuesta 
+    a estímulos— y supramoleculares —basados en interacciones físicas reversibles de menor energía.
+  </p>
+
+  <h3 style="margin-top: 2.5rem; color: var(--accent-light);">A. Covalentes dinámicos</h3>
+  <div class="mec-grid">
+    <div class="mec-card">
+      <div class="mec-num">A.1</div>
+      <h4>Diels-Alder / retro-DA</h4>
+      <p>Cicloadición reversible furano-maleimida. A bajas temperaturas el enlace se forma; a ~120 °C la retro-DA lo rompe permitiendo reconfiguración. Recupera hasta el 80% de las propiedades mecánicas.</p>
+    </div>
+    <div class="mec-card blue">
+      <div class="mec-num">A.2</div>
+      <h4>Metátesis de disulfuro (–S–S–)</h4>
+      <p>Los enlaces disulfuro se intercambian mediante metátesis activada por luz UV, temperatura o catalizadores redox. Especialmente valorados para recubrimientos y elastómeros.</p>
+    </div>
+    <div class="mec-card">
+      <div class="mec-num">A.3</div>
+      <h4>Bases de Schiff (Iminas)</h4>
+      <p>Reacción reversible entre grupos amino y aldehído. El enlace C=N se hidroliza y reforma en presencia de agua. Ampliamente empleado en hidrogeles biomédicos por su biocompatibilidad.</p>
+    </div>
+    <div class="mec-card amber">
+      <div class="mec-num">A.4</div>
+      <h4>Vitrimers — transesterificación</h4>
+      <p>Polímeros reticulados con intercambios covalentes reversibles. Permiten flujo viscoso a temperaturas elevadas sin pérdida de cohesión estructural. Útiles en aplicaciones de alta estabilidad térmica.</p>
+    </div>
+  </div>
+
+  <h3 style="margin-top: 3rem;">B. Supramoleculares (no covalentes)</h3>
+  <div class="mec-grid">
+    <div class="mec-card">
+      <div class="mec-num">B.1</div>
+      <h4>Enlace de hidrógeno</h4>
+      <p>El más utilizado en autorreparación. Grupos dadores y aceptores se rompen y reforman espontáneamente a temperatura ambiente. Ideal para hidrogeles biomédicos inyectables.</p>
+    </div>
+    <div class="mec-card blue">
+      <div class="mec-num">B.2</div>
+      <h4>Interacciones π–π</h4>
+      <p>Apilamiento de anillos aromáticos adyacentes que contribuyen a la cohesión del material y se reforman tras la separación. Se combinan frecuentemente con otros mecanismos.</p>
+    </div>
+    <div class="mec-card">
+      <div class="mec-num">B.3</div>
+      <h4>Coordinación metal-ligando</h4>
+      <p>Complejos reversibles de iones metálicos (Fe³⁺, Zn²⁺, Cu²⁺) con ligandos orgánicos (catecoles, piridinas). Buena combinación de resistencia y capacidad reparadora.</p>
+    </div>
+    <div class="mec-card amber">
+      <div class="mec-num">B.4</div>
+      <h4>Huésped-anfitrión</h4>
+      <p>Pares moleculares como ciclodextrina (anfitrión) y azobenceno o adamantano (huésped) forman complejos de inclusión no covalentes disociables y reformables con alta selectividad.</p>
+    </div>
+  </div>
+</section>
+
+<div class="full-sep"></div>
+
+<!-- PROPIEDADES -->
+<section id="propiedades">
+  <div class="section-label">05 — Propiedades y Eficiencia</div>
+  <h2>Balance entre <strong>resistencia</strong><br>y capacidad reparadora</h2>
+
+  <div class="props-container">
+    <div>
+      <p>
+        Uno de los principales retos en el diseño es lograr equilibrio entre propiedades mecánicas 
+        y eficiencia de autorreparación. Existe una <em>relación inversa fundamental</em>: mayor 
+        resistencia mecánica reduce la movilidad de cadenas, limitando la reparación.
+      </p>
+      <p>
+        La <strong>eficiencia de reparación (ER)</strong> es el parámetro estándar para comparar sistemas, 
+        expresado como la proporción entre la propiedad mecánica recuperada y la propiedad original del material.
+      </p>
+      <p>
+        Las investigaciones más recientes se enfocan en estrategias híbridas que combinan mecanismos 
+        covalentes y no covalentes para alcanzar un mejor balance.
+      </p>
+    </div>
+    <div>
+      <div class="efficiency-bars">
+        <div class="bar-item">
+          <div class="bar-label">
+            <span>Microcápsulas (White et al., 2001)</span>
+            <span>75%</span>
+          </div>
+          <div class="bar-track">
+            <div class="bar-fill" style="width: 75%"></div>
+          </div>
+        </div>
+        <div class="bar-item">
+          <div class="bar-label">
+            <span>Diels-Alder intrínseco (Ratwani et al., 2023)</span>
+            <span>80%</span>
+          </div>
+          <div class="bar-track">
+            <div class="bar-fill" style="width: 80%"></div>
+          </div>
+        </div>
+        <div class="bar-item">
+          <div class="bar-label">
+            <span>Supramoleculares (propiedades elásticas)</span>
+            <span>~100%</span>
+          </div>
+          <div class="bar-track">
+            <div class="bar-fill amber" style="width: 98%"></div>
+          </div>
+        </div>
+        <div class="bar-item">
+          <div class="bar-label">
+            <span>Sistemas híbridos (meta actual del campo)</span>
+            <span>En desarrollo</span>
+          </div>
+          <div class="bar-track">
+            <div class="bar-fill blue" style="width: 60%; background: repeating-linear-gradient(90deg,#378ADD 0,#378ADD 6px,transparent 6px,transparent 12px)"></div>
+          </div>
+        </div>
+      </div>
+      <p style="font-size:0.75rem; color: var(--text-dim); margin-top:1rem;">
+        ER = Propiedad recuperada / Propiedad original × 100
+      </p>
+    </div>
+  </div>
+</section>
+
+<div class="full-sep"></div>
+
+<!-- APLICACIONES -->
+<section id="aplicaciones">
+  <div class="section-label">06 — Aplicaciones Biomédicas</div>
+  <h2>La materia inteligente<br><strong>al servicio de la salud</strong></h2>
+  <p style="max-width:680px;">
+    El sector biomédico representa uno de los ámbitos de aplicación más prometedores, dado que 
+    los materiales empleados en el cuerpo humano están sometidos a condiciones mecánicas dinámicas 
+    y deben mantener su funcionalidad por largos períodos.
+  </p>
+
+  <div class="app-grid">
+    <div class="app-card">
+      <div class="app-icon">
+        <svg viewBox="0 0 24 24"><path d="M12 2c-5.523 0-10 4.477-10 10s4.477 10 10 10 10-4.477 10-10-4.477-10-10-10zm0 4v6l4 2"/></svg>
+      </div>
+      <h4>Cicatrización de heridas</h4>
+      <p>Apósitos inteligentes de hidrogel que se adaptan a la morfología de la lesión y mantienen ambiente húmedo para regeneración celular.</p>
+    </div>
+    <div class="app-card">
+      <div class="app-icon">
+        <svg viewBox="0 0 24 24"><path d="M9 3H5a2 2 0 0 0-2 2v4m6-6h10a2 2 0 0 1 2 2v4M9 3v18m0 0h10a2 2 0 0 0 2-2V9M9 21H5a2 2 0 0 1-2-2V9m0 0h18"/></svg>
+      </div>
+      <h4>Tejido óseo y cartilaginoso</h4>
+      <p>Hidrogeles rígidos autorreparables con redes poliméricas duales para superar el compromiso entre dureza mecánica y capacidad reparadora.</p>
+    </div>
+    <div class="app-card">
+      <div class="app-icon">
+        <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="7"/><path d="M12 9v3l2 2"/></svg>
+      </div>
+      <h4>Liberación controlada de fármacos</h4>
+      <p>Polímeros inyectables que se fluidifican al pasar por la aguja y recuperan estructura de gel una vez administrados, para liberación local y sostenida.</p>
+    </div>
+    <div class="app-card">
+      <div class="app-icon">
+        <svg viewBox="0 0 24 24"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
+      </div>
+      <h4>Electrónica flexible</h4>
+      <p>Recubrimientos autorreparables para dispositivos electrónicos flexibles que mantienen funcionalidad tras deformaciones mecánicas repetidas.</p>
+    </div>
+    <div class="app-card">
+      <div class="app-icon">
+        <svg viewBox="0 0 24 24"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/></svg>
+      </div>
+      <h4>Industria aeroespacial</h4>
+      <p>Materiales compuestos autorreparables para estructuras aeroespaciales que pueden sellar microfisuras sin intervención humana, reduciendo costos de mantenimiento.</p>
+    </div>
+    <div class="app-card">
+      <div class="app-icon">
+        <svg viewBox="0 0 24 24"><path d="M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20zm0 6v4l3 3"/></svg>
+      </div>
+      <h4>Impresión 3D y 4D</h4>
+      <p>Integración con tecnologías de fabricación aditiva para estructuras complejas con autorreparación programada y respuesta a estímulos del entorno.</p>
+    </div>
+  </div>
+</section>
+
+<div class="full-sep"></div>
+
+<!-- PERSPECTIVAS -->
+<section id="perspectivas">
+  <div class="section-label">07 — Perspectivas y Desafíos</div>
+  <h2>Fronteras activas<br><strong>del campo</strong></h2>
+  <p style="max-width: 700px;">
+    A pesar del notable avance, los polímeros autorreparables enfrentan desafíos importantes para 
+    su implementación a escala industrial. El compromiso entre propiedades mecánicas y eficiencia 
+    de reparación aún no ha sido resuelto de manera universal.
+  </p>
+  <div class="sci-quote" style="max-width: 700px;">
+    "Los enlaces dinámicos que habilitan la autorreparación son inherentemente más débiles que los 
+    enlaces covalentes estáticos, lo que implica que la mayor parte de los polímeros autorreparables 
+    presentan baja resistencia a la fractura en comparación con materiales convencionales."
+    <cite>— Kin et al., 2023</cite>
+  </div>
+  <p style="max-width: 700px;">
+    Desde una perspectiva de sostenibilidad, la investigación se orienta hacia polímeros autorreparables 
+    de base biológica y biodegradables. La integración con impresión 3D y 4D representa uno de los 
+    horizontes más prometedores del campo en los próximos años.
+  </p>
+</section>
+
+<div class="full-sep"></div>
+
+<!-- GLOSARIO -->
+<section id="glosario">
+  <div class="section-label">08 — Definición de Términos</div>
+  <h2>Glosario <strong>científico</strong></h2>
+  <div class="glosario-grid">
+    <div class="glosario-item">
+      <div class="glosario-term">Polímero autorreparable</div>
+      <p class="glosario-def">Material polimérico capaz de recuperar de forma autónoma o estimulada sus propiedades físicas, químicas y mecánicas originales tras sufrir un daño, imitando el comportamiento de tejidos biológicos vivos.</p>
+    </div>
+    <div class="glosario-item">
+      <div class="glosario-term">Eficiencia de reparación (ER)</div>
+      <p class="glosario-def">Parámetro cuantitativo que expresa la proporción entre la propiedad mecánica recuperada y la propiedad original del material virgen, usualmente expresada como porcentaje.</p>
+    </div>
+    <div class="glosario-item">
+      <div class="glosario-term">Sistema extrínseco</div>
+      <p class="glosario-def">Polímero autorreparable que contiene agentes reparadores externos en microcápsulas, fibras huecas o redes vasculares, liberados ante daño mecánico para sellar la zona afectada.</p>
+    </div>
+    <div class="glosario-item">
+      <div class="glosario-term">Sistema intrínseco</div>
+      <p class="glosario-def">Polímero autorreparable cuya capacidad proviene de la propia reactividad de la cadena polimérica, mediante enlaces covalentes dinámicos o interacciones supramoleculares reversibles.</p>
+    </div>
+    <div class="glosario-item">
+      <div class="glosario-term">Reacción de Diels-Alder (DA)</div>
+      <p class="glosario-def">Reacción de cicloadición [4+2] reversible entre un dieno conjugado y un dienófilo que forma enlace C–C estable a bajas temperaturas y se rompe a ~120 °C (retro-DA), permitiendo reconfiguración polimérica.</p>
+    </div>
+    <div class="glosario-item">
+      <div class="glosario-term">Enlace covalente dinámico</div>
+      <p class="glosario-def">Enlace covalente capaz de romperse y reformarse reversiblemente en respuesta a estímulos externos (calor, luz UV, catalizadores), sin pérdida neta de material.</p>
+    </div>
+    <div class="glosario-item">
+      <div class="glosario-term">Vitrimer</div>
+      <p class="glosario-def">Polímero reticulado con reacciones de intercambio covalente reversibles (transesterificación) que permiten flujo y reorganización de red a temperaturas elevadas manteniendo integridad estructural.</p>
+    </div>
+    <div class="glosario-item">
+      <div class="glosario-term">Catalizador de Grubbs</div>
+      <p class="glosario-def">Complejo organometálico de rutenio (Premio Nobel 2005) que cataliza la ROMP del diciclopentadieno. Empleado en el primer sistema autorreparable autónomo (White et al., 2001).</p>
+    </div>
+    <div class="glosario-item">
+      <div class="glosario-term">Hidrogel autorreparable</div>
+      <p class="glosario-def">Red polimérica tridimensional hidrofílica con gran retención de agua que puede autorrepararse tras daño mecánico mediante interacciones reversibles como bases de Schiff o enlaces de hidrógeno.</p>
+    </div>
+    <div class="glosario-item">
+      <div class="glosario-term">Biomimético</div>
+      <p class="glosario-def">Material, sistema o proceso diseñado imitando estructuras y mecanismos de la naturaleza. En polímeros autorreparables, se refiere a la inspiración en la cicatrización de tejidos biológicos vivos.</p>
+    </div>
+    <div class="glosario-item">
+      <div class="glosario-term">Microcápsula</div>
+      <p class="glosario-def">Pequeño recipiente esférico de cáscara polimérica (urea-formaldehído) que encapsula un agente reparador líquido. Al romperse por una grieta, libera su contenido hacia la zona dañada.</p>
+    </div>
+    <div class="glosario-item">
+      <div class="glosario-term">Base de Schiff (enlace imínico)</div>
+      <p class="glosario-def">Enlace covalente dinámico formado por la reacción reversible entre un grupo amino (–NH₂) y un aldehído (–CHO), generando enlace C=N que puede hidrolizarse y reformarse en presencia de agua.</p>
+    </div>
+  </div>
+</section>
+
+<div class="full-sep"></div>
+
+<!-- REFERENCIAS -->
+<section id="referencias">
+  <div class="section-label">09 — Referencias bibliográficas</div>
+  <h2>Fuentes <strong>científicas</strong></h2>
+  <ul class="ref-list">
+    <li>
+      <span class="ref-num">01</span>
+      <span>Bashir, S., Hina, M., Iqbal, J., Rajpar, A. H., Mujtaba, M. A., Alghamdi, N. A., Wageh, S., Ramesh, K., &amp; Ramesh, S. (2022). Fundamental concepts of hydrogels: Synthesis, properties, and their applications. <em>Polymers, 14</em>(11), 2235. <a href="https://doi.org/10.3390/polym14112235">https://doi.org/10.3390/polym14112235</a></span>
+    </li>
+    <li>
+      <span class="ref-num">02</span>
+      <span>CAS. (2024). Self-healing polymers: Mechanisms, applications, and future directions. CAS, A Division of the American Chemical Society. <a href="https://www.cas.org/resources/cas-insights/self-healing-polymers">https://www.cas.org/resources/cas-insights/self-healing-polymers</a></span>
+    </li>
+    <li>
+      <span class="ref-num">03</span>
+      <span>Comisión Europea – Proyecto HIPOCRATES. (2017). HIPOCRATES: Self-healing polymer composites for aerospace applications (Project ID: 760876). CORDIS. <a href="https://cordis.europa.eu/project/id/760876">https://cordis.europa.eu/project/id/760876</a></span>
+    </li>
+    <li>
+      <span class="ref-num">04</span>
+      <span>Instituto de Investigaciones en Materiales – UNAM. (2026, enero). Investigadores del IIM-UNAM sintetizan nuevos polímeros autorreparables mediante método novedoso. Universidad Nacional Autónoma de México. <a href="https://www.iim.unam.mx">https://www.iim.unam.mx</a></span>
+    </li>
+    <li>
+      <span class="ref-num">05</span>
+      <span>Kin, I., Akdeniz, E., &amp; Yildirim, A. (2023). Self-healing polymers: Classification, synthesis strategies, and biomedical applications. <em>Polymers, 15</em>(4), 1012. <a href="https://doi.org/10.3390/polym15041012">https://doi.org/10.3390/polym15041012</a></span>
+    </li>
+    <li>
+      <span class="ref-num">06</span>
+      <span>Ratwani, C. R., Esposti, M. D., Morselli, D., &amp; Celli, A. (2023). Progress in self-healing polymer composites: A comprehensive review. <em>Progress in Polymer Science, 138</em>, 101649. <a href="https://doi.org/10.1016/j.progpolymsci.2023.101649">https://doi.org/10.1016/j.progpolymsci.2023.101649</a></span>
+    </li>
+    <li>
+      <span class="ref-num">07</span>
+      <span>Wei, Z., Yang, J., Liu, Z. Q., Xu, F., Zhou, J. X., Zrínyi, M., Osada, Y., &amp; Chen, Y. M. (2024). Novel biocompatible polysaccharide-based self-healing hydrogel to deliver hydrophilic drug. <em>Advanced Functional Materials, 34</em>(12), 2309847. <a href="https://doi.org/10.1002/adfm.202309847">https://doi.org/10.1002/adfm.202309847</a></span>
+    </li>
+    <li>
+      <span class="ref-num">08</span>
+      <span>White, S. R., Sottos, N. R., Geubelle, P. H., Moore, J. S., Kessler, M. R., Sriram, S. R., Brown, E. N., &amp; Viswanathan, S. (2001). Autonomic healing of polymer composites. <em>Nature, 409</em>(6822), 794–797. <a href="https://doi.org/10.1038/35057232">https://doi.org/10.1038/35057232</a></span>
+    </li>
+    <li>
+      <span class="ref-num">09</span>
+      <span>Zaman, A., Shi, X., Liang, H., &amp; Wu, G. (2021). Self-healing polymeric materials: A review of recent developments. <em>European Polymer Journal, 161</em>, 110839. <a href="https://doi.org/10.1016/j.eurpolymj.2021.110839">https://doi.org/10.1016/j.eurpolymj.2021.110839</a></span>
+    </li>
+  </ul>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-logo">SelfHeal<span style="color: var(--text-muted);">Sci</span></div>
+
+</footer>
+
+</body>
+</html>
